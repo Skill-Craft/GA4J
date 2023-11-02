@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="created readme">
+    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="structured a lot of things">
       <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/Chromosome.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/SelectionAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +21,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -106,12 +108,21 @@
       <option name="project" value="LOCAL" />
       <updated>1698265427183</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="structured a lot of things">
+      <option name="closed" value="true" />
+      <created>1698959942865</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1698959942865</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="created worktree" />
     <MESSAGE value="created readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="created readme" />
+    <MESSAGE value="structured a lot of things" />
+    <option name="LAST_COMMIT_MESSAGE" value="structured a lot of things" />
   </component>
 </project>
