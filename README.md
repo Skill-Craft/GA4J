@@ -1,1 +1,3 @@
-Genetic Algorithm library in Java 
+# GA4J
+
+Genetic Algorithm library for Java 
