@@ -2,19 +2,67 @@ package genetic.algorithm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
 
-    private Float crossoverRate;
-    private Float elitismRate;
-    private Float selectionRate;
-    private Float mutationRate;
-    private Function fitnessFunction;
+    private final Float crossoverRate;
+    private final Float elitismRate;
+    private final Float selectionRate;
+    private final Float mutationRate;
+    private final Function fitnessFunction;
     private String selectionAlgorithm;
     private ArrayList<ArrayList<Chromosome>> populations;
+    private final Integer populationSize;
+    private final Integer chromosomeSize;
+    private final Integer maxGenerations;
+    private Integer generation;
 
+
+    public BaseGeneticAlgorithm(Integer populationSize,
+                                Integer chromosomeSize,
+                                Integer maxGenerations,
+                                Float mutationRate,
+                                Float selectionRate,
+                                Float elitismRate,
+                                Float crossoverRate,
+                                Function fitnessFunction,
+                                String selectionAlgorithm)
+    {
+        setSelectionAlgorithm(selectionAlgorithm);
+        this.chromosomeSize = chromosomeSize;
+        this.maxGenerations = maxGenerations;
+        this.mutationRate = mutationRate;
+        this.crossoverRate = crossoverRate;
+        this.elitismRate = elitismRate;
+        this.selectionRate = selectionRate;
+        this.fitnessFunction = fitnessFunction;
+        this.populationSize = populationSize;
+
+        populations = new ArrayList<>();
+        this.generation = 0;
+
+    }
+
+    public void next(boolean verbose){
+        populations.add(new ArrayList<>());
+        if(generation == 0){
+            populations.get(generation).addAll(Chromosome.generatePopulation(populationSize, chromosomeSize, fitnessFunction));
+        }
+        populations.get(generation).stream().parallel().forEach(Chromosome::computeFitness);
+        generation++;
+    }
+
+    public void run(boolean verbose){
+        while (generation < maxGenerations){
+            next(verbose);
+            if(verbose){
+                System.out.println("Generation: " + generation);
+            }
+        }
+    }
 
     @Override
     public ArrayList<Chromosome> getPopulation() {
@@ -30,18 +78,13 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
     }
 
     @Override
-    public ArrayList<Integer> populationInfo() { // PopulationSize, ChromosomeSize, MaxGenerations
-        return null;
+    public List<Integer> populationInfo() { // PopulationSize, ChromosomeSize, MaxGenerations
+        return Arrays.asList(this.populationSize, this.chromosomeSize, this.maxGenerations);
     }
 
     @Override
-    public ArrayList<Float> rates() {
-        ArrayList<Float> rates = new ArrayList<>();
-        rates.add(this.mutationRate);
-        rates.add(this.crossoverRate);
-        rates.add(this.elitismRate);
-        rates.add(this.selectionRate);
-        return rates;
+    public List<Float> rates() {
+        return Arrays.asList(this.mutationRate, this.crossoverRate, this.elitismRate, this.selectionRate);
     }
 
     @Override
@@ -66,7 +109,7 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
     }
 
     @Override
-    public Long getGeneration() {
-        return null;
+    public Integer getGeneration() {
+        return generation;
     }
 }

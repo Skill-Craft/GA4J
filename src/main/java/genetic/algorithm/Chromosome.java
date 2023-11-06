@@ -1,19 +1,31 @@
 package genetic.algorithm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.function.Function;
 
 public class Chromosome {
     boolean isElite;
+    private final Function fitnessFunction;
+    private final Integer chromosomeSize;
 
     ArrayList<Integer> state;
 
 
-    public Chromosome(){
+    public Chromosome(Integer chromosomeSize, Function fitnessFunction){
+        this.fitnessFunction = fitnessFunction;
+        this.chromosomeSize = chromosomeSize;
+
+    }
+
+    public static Collection<? extends Chromosome> generatePopulation(Integer populationSize, Integer chromosomeSize, Function fitnessFunction) {
+        return Arrays.asList(new Chromosome[populationSize]);
     }
 
 
     Chromosome createMutant(){
-        return new Chromosome(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        return null;  //new Chromosome(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     void mutate(){
@@ -44,4 +56,6 @@ public class Chromosome {
        this.isElite = !this.isElite;
     }
 
+    public void computeFitness() {
+    }
 }

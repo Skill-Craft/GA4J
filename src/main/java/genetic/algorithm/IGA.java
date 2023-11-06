@@ -1,18 +1,19 @@
 package genetic.algorithm;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public interface IGA {
-    ArrayList<Integer> populationInfo(); // PopulationSize, ChromosomeSize, MaxGenerations
-    ArrayList<Float> rates(); // Mutation, Crossover, Elitism, Selection
+    List<Integer> populationInfo(); // PopulationSize, ChromosomeSize, MaxGenerations
+    List<Float> rates(); // Mutation, Crossover, Elitism, Selection
 
     Function fitnessFunction(); // FitnessFunction
 
     ArrayList<ArrayList<Chromosome>> getAllPopulations(); // Population
 
     ArrayList<Chromosome> getPopulation();
-    Long getGeneration(); // Generation
+    Integer getGeneration(); // Generation
 
     default void selectChromosomes(){
         // Selection
