@@ -20,8 +20,24 @@ public class Chromosome {
 
     }
 
-    void crossover(Chromosome other){
+    void crossover(Chromosome other, String crossoverType){
+        switch (crossoverType) {
+            case "one-point" -> onePointCrossover(other);
+            case "two-point" -> twoPointCrossover(other);
+            case "uniform" -> uniformCrossover(other);
+        }
+    }
 
+    void onePointCrossover(Chromosome other){
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
+
+    void twoPointCrossover(Chromosome other){
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
+
+    void uniformCrossover(Chromosome other){
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     void elitify(){

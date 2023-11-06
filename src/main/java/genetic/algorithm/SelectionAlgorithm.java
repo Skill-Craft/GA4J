@@ -1,8 +1,7 @@
 package genetic.algorithm;
 
-import java.util.Objects;
-
 public interface SelectionAlgorithm {
+    String[] optionsSelectionAlgorithms = {"roulete", "tournament", "rank", "random"};
     private void roulette(Float rate){
         // Selection
     }
@@ -24,14 +23,11 @@ public interface SelectionAlgorithm {
     Float getSelectionRate();
 
     default void select(){
-        if(Objects.equals(getSelectionAlgorithm(), "roulette")){
-            roulette(getSelectionRate());
-        } else if(Objects.equals(getSelectionAlgorithm(), "tournament")){
-            tournament(getSelectionRate());
-        } else if(Objects.equals(getSelectionAlgorithm(), "rank")){
-            rank(getSelectionRate());
-        } else if(Objects.equals(getSelectionAlgorithm(), "random")){
-            random(getSelectionRate());
+        switch (getSelectionAlgorithm()) {
+            case "roulette" -> roulette(getSelectionRate());
+            case "tournament" -> tournament(getSelectionRate());
+            case "rank" -> rank(getSelectionRate());
+            case "random" -> random(getSelectionRate());
         }
     }
 }
