@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
+public class BaseGeneticAlgorithm implements IGA {
 
     private final Float crossoverRate;
     private final Float elitismRate;
@@ -40,6 +40,14 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
         populations = new ArrayList<>();
         this.generation = 0;
 
+    }
+
+    @Override
+    public ArrayList<Chromosome> getPopulation() {
+        if(!populations.isEmpty()){
+            return populations.get(populations.size()-1);
+        }
+        return null;
     }
 
     @Override
@@ -88,18 +96,11 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
     }
 
     @Override
-    public ArrayList<Chromosome> getPopulation() {
-        if(!populations.isEmpty()){
-            return populations.get(populations.size()-1);
-        }
-        return null;
-    }
-
-    @Override
     public Integer getGeneration() {
         return generation;
     }
 
+    @Override
     public void next(boolean verbose){
         populations.add(new ArrayList<>());
         if(generation == 0){
@@ -107,9 +108,14 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
         }
         System.out.printf("GENERATION %d: %n", generation);
         evaluateChromosomes(verbose);
+        elitifyChromosomes();
+        selectChromosomes();
         generation++;
+        crossoverChromosomes();
+        mutateChromosomes();
     }
 
+    @Override
     public void run(boolean verbose){
         while (generation < maxGenerations){
             next(verbose);

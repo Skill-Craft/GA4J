@@ -2,10 +2,13 @@ package genetic.algorithm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
 public interface IGA {
+    String[] optionsSelectionAlgorithms = {"roulette", "tournament", "rank", "random"};
+
     default List<Integer> populationInfo(){
         return Arrays.asList(getPopulationSize(), getChromosomeSize(), getMaxGenerations());
     }
@@ -28,10 +31,6 @@ public interface IGA {
     ArrayList<Chromosome> getPopulation();
     Integer getGeneration(); // Generation
 
-    default void selectChromosomes(){
-        // Selection
-    }
-
     default void crossoverChromosomes(){
         // Crossover
     }
@@ -41,7 +40,9 @@ public interface IGA {
     }
 
     default void elitifyChromosomes(){
-        // Elitism
+        List<Chromosome> aux = getPopulation().stream().parallel().sorted().toList();
+        Integer numElites = (int) (getPopulationSize() * getElitismRate());
+        aux.subList(0, numElites).forEach(Chromosome::switchEliteStatus);
     }
 
     default void evaluateChromosomes(boolean verbose){
@@ -55,5 +56,49 @@ public interface IGA {
 
     default void generateInitialPopulation(){
         getAllPopulations().get(getGeneration()).addAll(Chromosome.generatePopulation(getPopulationSize(), getChromosomeSize(), fitnessFunction()));
+    }
+
+    void next(boolean verbose);
+
+    void run(boolean verbose);
+
+    private void roulette(){
+        // Selection
+
+    }
+
+    private void tournament(){
+        // Selection
+    }
+
+    private void rank(){
+        // Selection
+    }
+
+    private void random(){
+        // Selection
+    }
+
+    String getSelectionAlgorithm();
+
+    default List<Chromosome> getNonElites(){
+        return getPopulation().stream().parallel().filter(c -> !c.isElite).toList();
+    }
+
+    default void selectChromosomes(){
+        switch (getSelectionAlgorithm()) {
+            case "roulette" -> roulette();
+            case "tournament" -> tournament();
+            case "rank" -> rank();
+            case "random" -> random();
+        }
+    }
+
+    default List<Chromosome> getBestChromosomes(){
+        return getAllPopulations().stream().parallel().map(arr -> {
+            ArrayList<Chromosome> aux = new ArrayList<>(arr);
+            aux.sort(Comparator.comparing(Chromosome::getFitness));
+            return aux.get(0);
+        }).toList();
     }
 }

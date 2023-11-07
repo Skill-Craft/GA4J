@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="even more structuring">
+    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="ready to implement algorithms">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/Chromosome.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/Chromosome.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/SelectionAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/SelectionAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/SelectionAlgorithm.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +149,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699359573116</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="ready to implement algorithms">
+      <option name="closed" value="true" />
+      <created>1699387426077</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1699387426077</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -158,6 +167,7 @@
     <MESSAGE value="restructured project" />
     <MESSAGE value="some more structuring" />
     <MESSAGE value="even more structuring" />
-    <option name="LAST_COMMIT_MESSAGE" value="even more structuring" />
+    <MESSAGE value="ready to implement algorithms" />
+    <option name="LAST_COMMIT_MESSAGE" value="ready to implement algorithms" />
   </component>
 </project>
