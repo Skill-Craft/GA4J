@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="some more structuring">
+    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="even more structuring">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/Chromosome.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/Chromosome.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/SelectionAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/SelectionAlgorithm.java" afterDir="false" />
     </list>
@@ -141,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699306913208</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="even more structuring">
+      <option name="closed" value="true" />
+      <created>1699359573116</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1699359573116</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -150,6 +157,7 @@
     <MESSAGE value="structured a lot of things" />
     <MESSAGE value="restructured project" />
     <MESSAGE value="some more structuring" />
-    <option name="LAST_COMMIT_MESSAGE" value="some more structuring" />
+    <MESSAGE value="even more structuring" />
+    <option name="LAST_COMMIT_MESSAGE" value="even more structuring" />
   </component>
 </project>

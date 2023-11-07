@@ -9,7 +9,6 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
 
     private final Float crossoverRate;
     private final Float elitismRate;
-    private final Float selectionRate;
     private final Float mutationRate;
     private final Function fitnessFunction;
     private String selectionAlgorithm;
@@ -24,7 +23,6 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
                                 Integer chromosomeSize,
                                 Integer maxGenerations,
                                 Float mutationRate,
-                                Float selectionRate,
                                 Float elitismRate,
                                 Float crossoverRate,
                                 Function fitnessFunction,
@@ -36,7 +34,6 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
         this.mutationRate = mutationRate;
         this.crossoverRate = crossoverRate;
         this.elitismRate = elitismRate;
-        this.selectionRate = selectionRate;
         this.fitnessFunction = fitnessFunction;
         this.populationSize = populationSize;
 
@@ -58,11 +55,6 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
     @Override
     public Float getMutationRate() {
         return mutationRate;
-    }
-
-    @Override
-    public Float getSelectionRate() {
-        return this.selectionRate;
     }
 
     @Override

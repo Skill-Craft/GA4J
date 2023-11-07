@@ -1,33 +1,35 @@
 package genetic.algorithm;
 
+import java.util.List;
+
 public interface SelectionAlgorithm {
     String[] optionsSelectionAlgorithms = {"roulette", "tournament", "rank", "random"};
-    private void roulette(Float rate){
+    private void roulette(){
         // Selection
     }
 
-    private void tournament(Float rate){
+    private void tournament(){
         // Selection
     }
 
-    private void rank(Float rate){
+    private void rank(){
         // Selection
     }
 
-    private void random(Float rate){
+    private void random(){
         // Selection
     }
 
     String getSelectionAlgorithm();
 
-    Float getSelectionRate();
+    List<Chromosome> getPopulation();
 
     default void select(){
         switch (getSelectionAlgorithm()) {
-            case "roulette" -> roulette(getSelectionRate());
-            case "tournament" -> tournament(getSelectionRate());
-            case "rank" -> rank(getSelectionRate());
-            case "random" -> random(getSelectionRate());
+            case "roulette" -> roulette();
+            case "tournament" -> tournament();
+            case "rank" -> rank();
+            case "random" -> random();
         }
     }
 }
