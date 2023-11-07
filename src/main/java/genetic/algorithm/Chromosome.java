@@ -9,6 +9,7 @@ public class Chromosome {
     boolean isElite;
     private final Function fitnessFunction;
     private final Integer chromosomeSize;
+    private Float val;
 
     ArrayList<Integer> state;
 
@@ -16,7 +17,7 @@ public class Chromosome {
     public Chromosome(Integer chromosomeSize, Function fitnessFunction){
         this.fitnessFunction = fitnessFunction;
         this.chromosomeSize = chromosomeSize;
-
+        this.isElite = false;
     }
 
     public static Collection<? extends Chromosome> generatePopulation(Integer populationSize, Integer chromosomeSize, Function fitnessFunction) {
@@ -52,10 +53,15 @@ public class Chromosome {
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
-    void elitify(){
+    void switchEliteStatus(){
        this.isElite = !this.isElite;
     }
 
     public void computeFitness() {
+        this.val = (Float) this.fitnessFunction.apply(this);
+    }
+
+    public void printFitness(Integer i) {
+        System.out.printf("Individual %d -> fitness %f%n", i, val);
     }
 }

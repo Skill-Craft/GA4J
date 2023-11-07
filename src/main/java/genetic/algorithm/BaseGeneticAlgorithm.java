@@ -2,7 +2,6 @@ package genetic.algorithm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -14,7 +13,7 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
     private final Float mutationRate;
     private final Function fitnessFunction;
     private String selectionAlgorithm;
-    private ArrayList<ArrayList<Chromosome>> populations;
+    private final ArrayList<ArrayList<Chromosome>> populations;
     private final Integer populationSize;
     private final Integer chromosomeSize;
     private final Integer maxGenerations;
@@ -46,22 +45,54 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
 
     }
 
-    public void next(boolean verbose){
-        populations.add(new ArrayList<>());
-        if(generation == 0){
-            populations.get(generation).addAll(Chromosome.generatePopulation(populationSize, chromosomeSize, fitnessFunction));
-        }
-        populations.get(generation).stream().parallel().forEach(Chromosome::computeFitness);
-        generation++;
+    @Override
+    public ArrayList<ArrayList<Chromosome>> getAllPopulations() {
+        return populations;
     }
 
-    public void run(boolean verbose){
-        while (generation < maxGenerations){
-            next(verbose);
-            if(verbose){
-                System.out.println("Generation: " + generation);
-            }
-        }
+    @Override
+    public Function fitnessFunction() {
+        return this.fitnessFunction;
+    }
+
+    @Override
+    public Float getMutationRate() {
+        return mutationRate;
+    }
+
+    @Override
+    public Float getSelectionRate() {
+        return this.selectionRate;
+    }
+
+    @Override
+    public Float getElitismRate() {
+        return elitismRate;
+    }
+
+    @Override
+    public Float getCrossoverRate() {
+        return crossoverRate;
+    }
+
+    @Override
+    public Integer getPopulationSize() {
+        return populationSize;
+    }
+
+    @Override
+    public Integer getChromosomeSize() {
+        return chromosomeSize;
+    }
+
+    @Override
+    public Integer getMaxGenerations() {
+        return maxGenerations;
+    }
+
+    @Override
+    public String getSelectionAlgorithm() {
+        return this.selectionAlgorithm;
     }
 
     @Override
@@ -73,43 +104,29 @@ public class BaseGeneticAlgorithm implements IGA, SelectionAlgorithm{
     }
 
     @Override
-    public ArrayList<ArrayList<Chromosome>> getAllPopulations() {
-        return populations;
+    public Integer getGeneration() {
+        return generation;
     }
 
-    @Override
-    public List<Integer> populationInfo() { // PopulationSize, ChromosomeSize, MaxGenerations
-        return Arrays.asList(this.populationSize, this.chromosomeSize, this.maxGenerations);
+    public void next(boolean verbose){
+        populations.add(new ArrayList<>());
+        if(generation == 0){
+            generateInitialPopulation();
+        }
+        System.out.printf("GENERATION %d: %n", generation);
+        evaluateChromosomes(verbose);
+        generation++;
     }
 
-    @Override
-    public List<Float> rates() {
-        return Arrays.asList(this.mutationRate, this.crossoverRate, this.elitismRate, this.selectionRate);
-    }
-
-    @Override
-    public Function fitnessFunction() {
-        return this.fitnessFunction;
-    }
-
-    @Override
-    public Float getSelectionRate() {
-        return this.selectionRate;
-    }
-
-    @Override
-    public String getSelectionAlgorithm() {
-        return this.selectionAlgorithm;
+    public void run(boolean verbose){
+        while (generation < maxGenerations){
+            next(verbose);
+        }
     }
 
     public void setSelectionAlgorithm(String selectionAlgorithm) {
         if (Arrays.stream(optionsSelectionAlgorithms).anyMatch(Predicate.isEqual(selectionAlgorithm))) {
             this.selectionAlgorithm = selectionAlgorithm;
         }
-    }
-
-    @Override
-    public Integer getGeneration() {
-        return generation;
     }
 }

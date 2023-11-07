@@ -1,7 +1,7 @@
 package genetic.algorithm;
 
 public interface SelectionAlgorithm {
-    String[] optionsSelectionAlgorithms = {"roulete", "tournament", "rank", "random"};
+    String[] optionsSelectionAlgorithms = {"roulette", "tournament", "rank", "random"};
     private void roulette(Float rate){
         // Selection
     }
