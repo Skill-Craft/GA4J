@@ -158,4 +158,8 @@ public class BaseGeneticAlgorithm implements IGA {
             next(verbose);
         }
     }
+
+    public List<Chromosome> getBestFromEachGeneration(){
+        return getBestChromosomes();
+    }
 }

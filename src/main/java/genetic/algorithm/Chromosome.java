@@ -8,7 +8,8 @@ import java.util.function.Function;
 public class Chromosome {
     private final Function fitnessFunction;
     private final Integer chromosomeSize;
-    private Float val;
+    private Function decoder;
+    private Float fitness;
     ArrayList<Integer> state;
     private Float rouletteValue;
 
@@ -51,15 +52,23 @@ public class Chromosome {
     }
 
     public Float getFitness() {
-        return this.val;
+        return this.fitness;
     }
 
     public void computeFitness() {
-        this.val = (Float) this.fitnessFunction.apply(this);
+        this.fitness = (Float) this.fitnessFunction.apply(this);
     }
 
     public void printFitness(Integer i) {
-        System.out.printf("Individual %d -> fitness %f%n", i, val);
+        System.out.printf("Individual %d -> fitness %f%n", i, fitness);
+    }
+
+    public void setDecoder(Function decoder){
+        this.decoder = decoder;
+    }
+
+    public Object decode(){
+        return this.decoder.apply(state);
     }
 
     public Float getRouletteValue() {

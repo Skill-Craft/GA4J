@@ -16,28 +16,25 @@ public interface IGA {
     Integer getPopulationSize();
     Integer getChromosomeSize();
     Integer getMaxGenerations();
-
     Function fitnessFunction();
-
     List<List<Chromosome>> getAllPopulations();
-
     List<Chromosome> getPopulation();
     Integer getGeneration();
+    String getCrossoverAlgorithm();
+    void setCrossoverAlgorithm(String crossoverAlgorithm);
+    void setSelectionAlgorithm(String selectionAlgorithm);
+    String getSelectionAlgorithm();
 
-    default void crossoverChromosomes(){
+    default Integer getEliteNumber(){
+        return (int) (getPopulationSize() * getElitismRate());
     }
 
-    default void mutateChromosomes(){
-        getPopulation().stream().parallel().forEach(c -> {
-            if (Math.random() < getProbabilityOfMutation()){
-                c.mutate(getMutationRate());
-            }
-        });
+    default Integer getNonEliteNumber(){
+        return getPopulationSize() - getEliteNumber();
     }
 
-    default void elitifyChromosomes(){
-        List<Chromosome> aux = getAllPopulations().get(getGeneration()-1).stream().parallel().sorted().toList();
-        getAllPopulations().add(aux.subList(0, getEliteNumber()));
+    default void generateInitialPopulation(){
+        getAllPopulations().get(getGeneration()).addAll(Chromosome.generatePopulation(getPopulationSize(), getChromosomeSize(), fitnessFunction()));
     }
 
     default void evaluateChromosomes(boolean verbose){
@@ -49,13 +46,10 @@ public interface IGA {
         }
     }
 
-    default void generateInitialPopulation(){
-        getAllPopulations().get(getGeneration()).addAll(Chromosome.generatePopulation(getPopulationSize(), getChromosomeSize(), fitnessFunction()));
+    default void elitifyChromosomes(){
+        List<Chromosome> aux = getAllPopulations().get(getGeneration()-1).stream().parallel().sorted().toList();
+        getAllPopulations().add(aux.subList(0, getEliteNumber()));
     }
-
-    void next(boolean verbose);
-
-    void run(boolean verbose);
 
     default void preProcessRoulette(){
 
@@ -87,15 +81,6 @@ public interface IGA {
         }
     }
 
-    String getSelectionAlgorithm();
-
-    default Integer getEliteNumber(){
-        return (int) (getPopulationSize() * getElitismRate());
-    }
-
-    default Integer getNonEliteNumber(){
-        return getPopulationSize() - getEliteNumber();
-    }
 
     default void selectChromosomes(){
         switch (getSelectionAlgorithm()) {
@@ -106,6 +91,22 @@ public interface IGA {
         }
     }
 
+    default void crossoverChromosomes(){
+    }
+
+    default void mutateChromosomes(){
+        getPopulation().stream().parallel().forEach(c -> {
+            if (Math.random() < getProbabilityOfMutation()){
+                c.mutate(getMutationRate());
+            }
+        });
+    }
+
+    void next(boolean verbose);
+
+    void run(boolean verbose);
+
+
     default List<Chromosome> getBestChromosomes(){
         return getAllPopulations().stream().parallel().map(arr -> {
             ArrayList<Chromosome> aux = new ArrayList<>(arr);
@@ -114,8 +115,4 @@ public interface IGA {
         }).toList();
     }
 
-    String getCrossoverAlgorithm();
-
-    void setCrossoverAlgorithm(String crossoverAlgorithm);
-    void setSelectionAlgorithm(String selectionAlgorithm);
 }
