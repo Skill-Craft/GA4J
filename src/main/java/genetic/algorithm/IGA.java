@@ -1,9 +1,6 @@
 package genetic.algorithm;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -39,7 +36,7 @@ public interface IGA {
     }
 
     default void elitifyChromosomes(){
-        List<Chromosome> aux = getPopulation().stream().parallel().sorted().toList();
+        List<Chromosome> aux = getAllPopulations().get(getGeneration()-1).stream().parallel().sorted().toList();
         getAllPopulations().add(aux.subList(0, getEliteNumber()));
     }
 
@@ -67,8 +64,8 @@ public interface IGA {
     default void roulette(Integer numberOfChromosomes) throws VerifyError{
         preProcessRoulette();
         for(int i=0; i<numberOfChromosomes; i++){
-            List<Chromosome> aux = getPopulation().stream().parallel().filter(c -> c.getRouletteValue() < Math.random()).toList();
-            Optional<Chromosome> chromosome = aux.stream().max(Comparator.comparing(Chromosome::getRouletteValue));
+            List<Chromosome> aux = getAllPopulations().get(getGeneration()-1).stream().parallel().filter(c -> c.getRouletteValue() >= Math.random()).toList();
+            Optional<Chromosome> chromosome = aux.stream().min(Comparator.comparing(Chromosome::getRouletteValue));
             if(chromosome.isPresent()){
                 getPopulation().add(chromosome.get());
             } else{
@@ -84,6 +81,10 @@ public interface IGA {
     }
 
     default void random(Integer numberOfChromosomes){
+        Random rand = new Random();
+        for(int i=0; i<getPopulationSize();i++){
+            getPopulation().add(getAllPopulations().get(getGeneration()-1).get(rand.nextInt(getPopulationSize())));
+        }
     }
 
     String getSelectionAlgorithm();
@@ -93,7 +94,7 @@ public interface IGA {
     }
 
     default Integer getNonEliteNumber(){
-        return getPopulationSize() - (int) (getPopulationSize() * getElitismRate());
+        return getPopulationSize() - getEliteNumber();
     }
 
     default void selectChromosomes(){

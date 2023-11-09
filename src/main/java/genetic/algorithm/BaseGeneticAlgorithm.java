@@ -145,8 +145,8 @@ public class BaseGeneticAlgorithm implements IGA {
         }
         System.out.printf("GENERATION %d: %n", generation);
         evaluateChromosomes(verbose);
-        elitifyChromosomes();
         generation++;
+        elitifyChromosomes();
         selectChromosomes();
         crossoverChromosomes();
         mutateChromosomes();

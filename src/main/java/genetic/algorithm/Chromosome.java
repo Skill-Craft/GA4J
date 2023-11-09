@@ -66,6 +66,10 @@ public class Chromosome {
         return rouletteValue;
     }
 
+    public void setRouletteValue(Float rouletteValue) {
+        this.rouletteValue = rouletteValue;
+    }
+
     Chromosome createMutant(Float probabilityOfMutation){
         List<Integer> mutant = new ArrayList<>(this.state);
         for(int i = 0; i<this.chromosomeSize; i++){
