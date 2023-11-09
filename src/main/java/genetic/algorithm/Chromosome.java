@@ -6,18 +6,16 @@ import java.util.List;
 import java.util.function.Function;
 
 public class Chromosome {
-    boolean isElite;
     private final Function fitnessFunction;
     private final Integer chromosomeSize;
     private Float val;
-
     ArrayList<Integer> state;
+    private Float rouletteValue;
 
 
     public Chromosome(Integer chromosomeSize, Function fitnessFunction){
         this.fitnessFunction = fitnessFunction;
         this.chromosomeSize = chromosomeSize;
-        this.isElite = false;
         this.state = new ArrayList<>();
         for(int i = 0; i<chromosomeSize; i++){
             this.state.add((int) (Math.random() * 2));
@@ -26,7 +24,6 @@ public class Chromosome {
 
     @SafeVarargs
     public Chromosome(Function fitnessFunction, List<Integer>... l){
-        this.isElite = false;
         this.fitnessFunction = fitnessFunction;
         this.state = new ArrayList<>(l[0]);
         for(int i = 1; i<l.length; i++){
@@ -36,7 +33,6 @@ public class Chromosome {
     }
 
     public Chromosome(Function fitnessFunction, List<Integer> l){
-        this.isElite = false;
         this.fitnessFunction = fitnessFunction;
         this.state = new ArrayList<>(l);
         this.chromosomeSize = this.state.size();
@@ -50,15 +46,39 @@ public class Chromosome {
         return population;
     }
 
+    public ArrayList<Integer> getState(){
+        return this.state;
+    }
 
-    Chromosome createMutant(){
+    public Float getFitness() {
+        return this.val;
+    }
+
+    public void computeFitness() {
+        this.val = (Float) this.fitnessFunction.apply(this);
+    }
+
+    public void printFitness(Integer i) {
+        System.out.printf("Individual %d -> fitness %f%n", i, val);
+    }
+
+    public Float getRouletteValue() {
+        return rouletteValue;
+    }
+
+    Chromosome createMutant(Float probabilityOfMutation){
         List<Integer> mutant = new ArrayList<>(this.state);
         for(int i = 0; i<this.chromosomeSize; i++){
-            if(Math.random() < 0.5){
+            if(Math.random() < probabilityOfMutation){
                 mutant.set(i, 1 - mutant.get(i));
             }
         }
+
         return new Chromosome(this.fitnessFunction, mutant);
+    }
+
+    public void mutate(Float probabilityOfMutation){
+        this.state = createMutant(probabilityOfMutation).state;
     }
 
     Chromosome[] crossover(Chromosome other, String crossoverType){
@@ -111,19 +131,5 @@ public class Chromosome {
         return new Chromosome[]{new Chromosome(this.fitnessFunction, p1), new Chromosome(this.fitnessFunction, p2)};
     }
 
-    void switchEliteStatus(){
-       this.isElite = !this.isElite;
-    }
 
-    public void computeFitness() {
-        this.val = (Float) this.fitnessFunction.apply(this);
-    }
-
-    public void printFitness(Integer i) {
-        System.out.printf("Individual %d -> fitness %f%n", i, val);
-    }
-
-    public Float getFitness() {
-        return this.val;
-    }
 }

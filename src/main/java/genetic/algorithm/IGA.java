@@ -1,48 +1,46 @@
 package genetic.algorithm;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface IGA {
     String[] optionsSelectionAlgorithms = {"roulette", "tournament", "rank", "random"};
-
-    default List<Integer> populationInfo(){
-        return Arrays.asList(getPopulationSize(), getChromosomeSize(), getMaxGenerations());
-    }
-    default List<Float> rates(){
-        return Arrays.asList(getMutationRate(), getCrossoverRate(), getElitismRate());
-    }
+    String[] optionsCrossoverAlgorithms = {"one-point", "two-point", "uniform"};
 
     Float getMutationRate();
+    Float getProbabilityOfMutation();
     Float getElitismRate();
     Float getCrossoverRate();
-
+    Float getCrossoverProbability();
     Integer getPopulationSize();
     Integer getChromosomeSize();
     Integer getMaxGenerations();
 
-    Function fitnessFunction(); // FitnessFunction
+    Function fitnessFunction();
 
-    ArrayList<ArrayList<Chromosome>> getAllPopulations(); // Population
+    List<List<Chromosome>> getAllPopulations();
 
-    ArrayList<Chromosome> getPopulation();
-    Integer getGeneration(); // Generation
+    List<Chromosome> getPopulation();
+    Integer getGeneration();
 
     default void crossoverChromosomes(){
-        // Crossover
     }
 
     default void mutateChromosomes(){
-        // Mutation
+        getPopulation().stream().parallel().forEach(c -> {
+            if (Math.random() < getProbabilityOfMutation()){
+                c.mutate(getMutationRate());
+            }
+        });
     }
 
     default void elitifyChromosomes(){
         List<Chromosome> aux = getPopulation().stream().parallel().sorted().toList();
-        Integer numElites = (int) (getPopulationSize() * getElitismRate());
-        aux.subList(0, numElites).forEach(Chromosome::switchEliteStatus);
+        getAllPopulations().add(aux.subList(0, getEliteNumber()));
     }
 
     default void evaluateChromosomes(boolean verbose){
@@ -62,35 +60,48 @@ public interface IGA {
 
     void run(boolean verbose);
 
-    private void roulette(){
-        // Selection
+    default void preProcessRoulette(){
 
     }
 
-    private void tournament(){
-        // Selection
+    default void roulette(Integer numberOfChromosomes) throws VerifyError{
+        preProcessRoulette();
+        for(int i=0; i<numberOfChromosomes; i++){
+            List<Chromosome> aux = getPopulation().stream().parallel().filter(c -> c.getRouletteValue() < Math.random()).toList();
+            Optional<Chromosome> chromosome = aux.stream().max(Comparator.comparing(Chromosome::getRouletteValue));
+            if(chromosome.isPresent()){
+                getPopulation().add(chromosome.get());
+            } else{
+                throw new VerifyError("Unexpected error occurred");
+            }
+        }
     }
 
-    private void rank(){
-        // Selection
+    default void tournament(Integer numberOfChromosomes){
     }
 
-    private void random(){
-        // Selection
+    default void rank(Integer numberOfChromosomes){
+    }
+
+    default void random(Integer numberOfChromosomes){
     }
 
     String getSelectionAlgorithm();
 
-    default List<Chromosome> getNonElites(){
-        return getPopulation().stream().parallel().filter(c -> !c.isElite).toList();
+    default Integer getEliteNumber(){
+        return (int) (getPopulationSize() * getElitismRate());
+    }
+
+    default Integer getNonEliteNumber(){
+        return getPopulationSize() - (int) (getPopulationSize() * getElitismRate());
     }
 
     default void selectChromosomes(){
         switch (getSelectionAlgorithm()) {
-            case "roulette" -> roulette();
-            case "tournament" -> tournament();
-            case "rank" -> rank();
-            case "random" -> random();
+            case "roulette" -> roulette(getNonEliteNumber());
+            case "tournament" -> tournament(getNonEliteNumber());
+            case "rank" -> rank(getNonEliteNumber());
+            case "random" -> random(getNonEliteNumber());
         }
     }
 
@@ -101,4 +112,9 @@ public interface IGA {
             return aux.get(0);
         }).toList();
     }
+
+    String getCrossoverAlgorithm();
+
+    void setCrossoverAlgorithm(String crossoverAlgorithm);
+    void setSelectionAlgorithm(String selectionAlgorithm);
 }
