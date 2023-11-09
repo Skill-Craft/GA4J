@@ -2,17 +2,22 @@ package genetic.algorithm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class BaseGeneticAlgorithm implements IGA {
 
-    private final Float crossoverRate;
-    private final Float elitismRate;
-    private final Float mutationRate;
     private final Function fitnessFunction;
+    private final Float elitismRate;
     private String selectionAlgorithm;
-    private final ArrayList<ArrayList<Chromosome>> populations;
+
+    private String crossoverAlgorithm = "one-point";
+    private final Float crossoverRate;
+    private final Float crossoverProbability;
+    private final Float mutationRate;
+    private final Float probabilityOfMutation;
+    private final List<List<Chromosome>> populations;
     private final Integer populationSize;
     private final Integer chromosomeSize;
     private final Integer maxGenerations;
@@ -22,9 +27,11 @@ public class BaseGeneticAlgorithm implements IGA {
     public BaseGeneticAlgorithm(Integer populationSize,
                                 Integer chromosomeSize,
                                 Integer maxGenerations,
-                                Float mutationRate,
                                 Float elitismRate,
+                                Float mutationRate,
+                                Float probabilityMutation,
                                 Float crossoverRate,
+                                Float crossoverProbability,
                                 Function fitnessFunction,
                                 String selectionAlgorithm)
     {
@@ -36,6 +43,8 @@ public class BaseGeneticAlgorithm implements IGA {
         this.elitismRate = elitismRate;
         this.fitnessFunction = fitnessFunction;
         this.populationSize = populationSize;
+        this.probabilityOfMutation = probabilityMutation;
+        this.crossoverProbability = crossoverProbability;
 
         populations = new ArrayList<>();
         this.generation = 0;
@@ -43,7 +52,7 @@ public class BaseGeneticAlgorithm implements IGA {
     }
 
     @Override
-    public ArrayList<Chromosome> getPopulation() {
+    public List<Chromosome> getPopulation() {
         if(!populations.isEmpty()){
             return populations.get(populations.size()-1);
         }
@@ -51,7 +60,7 @@ public class BaseGeneticAlgorithm implements IGA {
     }
 
     @Override
-    public ArrayList<ArrayList<Chromosome>> getAllPopulations() {
+    public List<List<Chromosome>> getAllPopulations() {
         return populations;
     }
 
@@ -66,6 +75,11 @@ public class BaseGeneticAlgorithm implements IGA {
     }
 
     @Override
+    public Float getProbabilityOfMutation() {
+        return probabilityOfMutation;
+    }
+
+    @Override
     public Float getElitismRate() {
         return elitismRate;
     }
@@ -73,6 +87,11 @@ public class BaseGeneticAlgorithm implements IGA {
     @Override
     public Float getCrossoverRate() {
         return crossoverRate;
+    }
+
+    @Override
+    public Float getCrossoverProbability() {
+        return crossoverProbability;
     }
 
     @Override
@@ -91,13 +110,31 @@ public class BaseGeneticAlgorithm implements IGA {
     }
 
     @Override
+    public Integer getGeneration() {
+        return generation;
+    }
+
+    @Override
     public String getSelectionAlgorithm() {
         return this.selectionAlgorithm;
     }
 
     @Override
-    public Integer getGeneration() {
-        return generation;
+    public void setSelectionAlgorithm(String selectionAlgorithm) {
+        if (Arrays.stream(optionsSelectionAlgorithms).anyMatch(Predicate.isEqual(selectionAlgorithm))) {
+            this.selectionAlgorithm = selectionAlgorithm;
+        }
+    }
+    @Override
+    public String getCrossoverAlgorithm() {
+        return crossoverAlgorithm;
+    }
+
+    @Override
+    public void setCrossoverAlgorithm(String crossoverAlgorithm) {
+        if (Arrays.stream(optionsCrossoverAlgorithms).anyMatch(Predicate.isEqual(crossoverAlgorithm))) {
+            this.crossoverAlgorithm = crossoverAlgorithm;
+        }
     }
 
     @Override
@@ -109,8 +146,8 @@ public class BaseGeneticAlgorithm implements IGA {
         System.out.printf("GENERATION %d: %n", generation);
         evaluateChromosomes(verbose);
         elitifyChromosomes();
-        selectChromosomes();
         generation++;
+        selectChromosomes();
         crossoverChromosomes();
         mutateChromosomes();
     }
@@ -119,12 +156,6 @@ public class BaseGeneticAlgorithm implements IGA {
     public void run(boolean verbose){
         while (generation < maxGenerations){
             next(verbose);
-        }
-    }
-
-    public void setSelectionAlgorithm(String selectionAlgorithm) {
-        if (Arrays.stream(optionsSelectionAlgorithms).anyMatch(Predicate.isEqual(selectionAlgorithm))) {
-            this.selectionAlgorithm = selectionAlgorithm;
         }
     }
 }
