@@ -52,14 +52,6 @@ public class BaseGeneticAlgorithm implements IGA {
     }
 
     @Override
-    public List<Chromosome> getPopulation() {
-        if(!populations.isEmpty()){
-            return populations.get(populations.size()-1);
-        }
-        return null;
-    }
-
-    @Override
     public List<List<Chromosome>> getAllPopulations() {
         return populations;
     }
@@ -147,14 +139,15 @@ public class BaseGeneticAlgorithm implements IGA {
         evaluateChromosomes(verbose);
         generation++;
         elitifyChromosomes();
-        selectChromosomes();
-        crossoverChromosomes();
-        mutateChromosomes();
+        List<Chromosome> nonElites = selectChromosomes();
+        crossoverChromosomes(nonElites);
+        mutateChromosomes(nonElites);
+        addNonElites(nonElites);
     }
 
     @Override
     public void run(boolean verbose){
-        while (generation < maxGenerations){
+        while (generation < getMaxGenerations()){
             next(verbose);
         }
     }

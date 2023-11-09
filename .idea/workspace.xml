@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="fixed roulette algo, added random algo" />
+    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="implemented main for testing reasons">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -183,7 +187,31 @@
       <option name="project" value="LOCAL" />
       <updated>1699536719557</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fixed roulette algo, added random algo">
+      <option name="closed" value="true" />
+      <created>1699537692577</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1699537692577</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fixed roulette algo, added random algo">
+      <option name="closed" value="true" />
+      <created>1699537697925</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1699537697925</updated>
+    </task>
+    <task id="LOCAL-00015" summary="implemented main for testing reasons">
+      <option name="closed" value="true" />
+      <created>1699539330005</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1699539330005</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -197,6 +225,7 @@
     <MESSAGE value="implemented mutation and crossover algos" />
     <MESSAGE value="sketched roulette algorithm" />
     <MESSAGE value="fixed roulette algo, added random algo" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed roulette algo, added random algo" />
+    <MESSAGE value="implemented main for testing reasons" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented main for testing reasons" />
   </component>
 </project>

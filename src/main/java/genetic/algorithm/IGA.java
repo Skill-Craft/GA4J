@@ -2,7 +2,6 @@ package genetic.algorithm;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public interface IGA {
     String[] optionsSelectionAlgorithms = {"roulette", "tournament", "rank", "random"};
@@ -18,13 +17,18 @@ public interface IGA {
     Integer getMaxGenerations();
     Function fitnessFunction();
     List<List<Chromosome>> getAllPopulations();
-    List<Chromosome> getPopulation();
     Integer getGeneration();
     String getCrossoverAlgorithm();
     void setCrossoverAlgorithm(String crossoverAlgorithm);
     void setSelectionAlgorithm(String selectionAlgorithm);
     String getSelectionAlgorithm();
 
+    default List<Chromosome> getPopulation(){
+        if(!getAllPopulations().isEmpty()){
+            return getAllPopulations().get(getGeneration()-1);
+        }
+        return null;
+    }
     default Integer getEliteNumber(){
         return (int) (getPopulationSize() * getElitismRate());
     }
@@ -52,10 +56,10 @@ public interface IGA {
     }
 
     default void preProcessRoulette(){
-
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
-    default void roulette(Integer numberOfChromosomes) throws VerifyError{
+    default List<Chromosome> roulette(Integer numberOfChromosomes) throws VerifyError{
         preProcessRoulette();
         for(int i=0; i<numberOfChromosomes; i++){
             List<Chromosome> aux = getAllPopulations().get(getGeneration()-1).stream().parallel().filter(c -> c.getRouletteValue() >= Math.random()).toList();
@@ -66,40 +70,64 @@ public interface IGA {
                 throw new VerifyError("Unexpected error occurred");
             }
         }
+        return null;
     }
 
-    default void tournament(Integer numberOfChromosomes){
+    default List<Chromosome> tournament(Integer numberOfChromosomes){
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        return null;
     }
 
-    default void rank(Integer numberOfChromosomes){
+    default List<Chromosome> rank(Integer numberOfChromosomes){
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        return null;
     }
 
-    default void random(Integer numberOfChromosomes){
+    default List<Chromosome> random(Integer numberOfChromosomes){
         Random rand = new Random();
         for(int i=0; i<getPopulationSize();i++){
             getPopulation().add(getAllPopulations().get(getGeneration()-1).get(rand.nextInt(getPopulationSize())));
         }
+        return null;
     }
 
 
-    default void selectChromosomes(){
+    default List<Chromosome> selectChromosomes(){
         switch (getSelectionAlgorithm()) {
-            case "roulette" -> roulette(getNonEliteNumber());
-            case "tournament" -> tournament(getNonEliteNumber());
-            case "rank" -> rank(getNonEliteNumber());
-            case "random" -> random(getNonEliteNumber());
+            case "roulette" -> {
+                return roulette(getNonEliteNumber());
+            }
+            case "tournament" -> {
+                return tournament(getNonEliteNumber());
+            }
+            case "rank" -> {
+                return rank(getNonEliteNumber());
+            }
+            case "random" -> {
+                return random(getNonEliteNumber());
+            }
+            default -> {
+                return null;
+            }
         }
     }
 
-    default void crossoverChromosomes(){
+
+    default void crossoverChromosomes(List<Chromosome> nonElites){
+        //!!!!!!!!!!!!!!!!!!
     }
 
-    default void mutateChromosomes(){
-        getPopulation().stream().parallel().forEach(c -> {
+
+    default void mutateChromosomes(List<Chromosome> nonElites){
+        nonElites.stream().parallel().forEach(c -> {
             if (Math.random() < getProbabilityOfMutation()){
                 c.mutate(getMutationRate());
             }
         });
+    }
+
+    default void addNonElites(List<Chromosome> nonElites){
+        getPopulation().addAll(nonElites);
     }
 
     void next(boolean verbose);
