@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.function.Function;
 
 public class Chromosome {
-    private final Function fitnessFunction;
+    private final Function<Chromosome, Float> fitnessFunction;
     private final Integer chromosomeSize;
-    private Function decoder;
+    private Function<Chromosome, Float> decoder;
     private Float fitness;
     ArrayList<Integer> state;
     private Float rouletteValue;
+    private List<Boolean> mask;
 
 
-    public Chromosome(Integer chromosomeSize, Function fitnessFunction){
+    public Chromosome(Integer chromosomeSize, Function<Chromosome, Float> fitnessFunction){
         this.fitnessFunction = fitnessFunction;
         this.chromosomeSize = chromosomeSize;
         this.state = new ArrayList<>();
@@ -24,7 +25,7 @@ public class Chromosome {
     }
 
     @SafeVarargs
-    public Chromosome(Function fitnessFunction, List<Integer>... l){
+    public Chromosome(Function<Chromosome, Float> fitnessFunction, List<Integer>... l){
         this.fitnessFunction = fitnessFunction;
         this.state = new ArrayList<>(l[0]);
         for(int i = 1; i<l.length; i++){
@@ -33,13 +34,13 @@ public class Chromosome {
         this.chromosomeSize = this.state.size();
     }
 
-    public Chromosome(Function fitnessFunction, List<Integer> l){
+    public Chromosome(Function<Chromosome, Float> fitnessFunction, List<Integer> l){
         this.fitnessFunction = fitnessFunction;
         this.state = new ArrayList<>(l);
         this.chromosomeSize = this.state.size();
     }
 
-    public static Collection<? extends Chromosome> generatePopulation(Integer populationSize, Integer chromosomeSize, Function fitnessFunction) {
+    public static Collection<? extends Chromosome> generatePopulation(Integer populationSize, Integer chromosomeSize, Function<Chromosome, Float> fitnessFunction) {
         ArrayList<Chromosome> population = new ArrayList<>();
         for(int i = 0; i<populationSize; i++){
             population.add(new Chromosome(chromosomeSize, fitnessFunction));
@@ -56,19 +57,19 @@ public class Chromosome {
     }
 
     public void computeFitness() {
-        this.fitness = (Float) this.fitnessFunction.apply(this);
+        this.fitness = this.fitnessFunction.apply(this);
     }
 
     public void printFitness(Integer i) {
         System.out.printf("Individual %d -> fitness %f%n", i, fitness);
     }
 
-    public void setDecoder(Function decoder){
+    public void setDecoder(Function<Chromosome, Float> decoder){
         this.decoder = decoder;
     }
 
-    public Object decode(){
-        return this.decoder.apply(state);
+    public Float decode(){
+        return this.decoder.apply(this);
     }
 
     public Float getRouletteValue() {
@@ -77,6 +78,14 @@ public class Chromosome {
 
     public void setRouletteValue(Float rouletteValue) {
         this.rouletteValue = rouletteValue;
+    }
+
+    public void setMask(List<Boolean> mask){
+        this.mask = mask;
+    }
+
+    public List<Boolean> getMask(){
+        return this.mask;
     }
 
     Chromosome createMutant(Float probabilityOfMutation){
@@ -104,6 +113,9 @@ public class Chromosome {
             }
             case "uniform" -> {
                 return uniformCrossover(other);
+            }
+            case "masked-uniform" -> {
+                return uniformCrossover(other, mask);
             }
             default -> {
                 return new Chromosome[]{this, other};
@@ -144,5 +156,19 @@ public class Chromosome {
         return new Chromosome[]{new Chromosome(this.fitnessFunction, p1), new Chromosome(this.fitnessFunction, p2)};
     }
 
+    Chromosome[] uniformCrossover(Chromosome other, List<Boolean> mask){
+        List<Integer> p1 = new ArrayList<>();
+        List<Integer> p2 = new ArrayList<>();
+        for(int i = 0; i<this.chromosomeSize; i++){
+            if(mask.get(i)){
+                p1.add(this.state.get(i));
+                p2.add(other.state.get(i));
+            }else{
+                p1.add(other.state.get(i));
+                p2.add(this.state.get(i));
+            }
+        }
+        return new Chromosome[]{new Chromosome(this.fitnessFunction, p1), new Chromosome(this.fitnessFunction, p2)};
+    }
 
 }

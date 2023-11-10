@@ -1,8 +1,22 @@
 package genetic.algorithm;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
+class Aux{
+    public Float val = 0f;
+    public Float fitness;
+    public Float getFitness(){
+        return fitness;
+    }
+
+    public Aux(Float fitness){
+        this.fitness = fitness;
+    }
+}
 public class Main {
 
     public static void main(String[] args) {
@@ -13,13 +27,7 @@ public class Main {
         Float mutationRate = 0.1f;
         Float probabilityMutation = 0.1f;
         Float crossoverRate = 0.1f;
-        Float crossoverProbability = 0.1f;
-        Function fitnessFunction = new Function<Chromosome, Float>(){
-            @Override
-            public Float apply(Chromosome t) {
-                return t.getState().stream().reduce(0, Integer::sum).floatValue();
-            }
-        };
+        Function<Chromosome, Float> fitnessFunction = (Function<Chromosome, Float>) t -> t.getState().stream().reduce(0, Integer::sum).floatValue();
         String selectionAlgorithm = "roulette";
         BaseGeneticAlgorithm ga = new BaseGeneticAlgorithm(
                 populationSize,
@@ -29,12 +37,14 @@ public class Main {
                 mutationRate,
                 probabilityMutation,
                 crossoverRate,
-                crossoverProbability,
                 fitnessFunction,
                 selectionAlgorithm
         );
-
+        ga.setCrossoverAlgorithm("one-point");
         ga.run(true);
-        ga.getBestFromEachGeneration().forEach(c -> c.printFitness(0));
+        var res = ga.getBestFromEachGeneration();
+        for(int i=0; i<res.size(); i++){
+            res.get(i).printFitness(i);
+        }
     }
 }

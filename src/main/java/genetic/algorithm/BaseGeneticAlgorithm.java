@@ -3,18 +3,18 @@ package genetic.algorithm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class BaseGeneticAlgorithm implements IGA {
 
-    private final Function fitnessFunction;
+    private final Function<Chromosome, Float> fitnessFunction;
     private final Float elitismRate;
     private String selectionAlgorithm;
 
     private String crossoverAlgorithm = "one-point";
     private final Float crossoverRate;
-    private final Float crossoverProbability;
     private final Float mutationRate;
     private final Float probabilityOfMutation;
     private final List<List<Chromosome>> populations;
@@ -31,8 +31,7 @@ public class BaseGeneticAlgorithm implements IGA {
                                 Float mutationRate,
                                 Float probabilityMutation,
                                 Float crossoverRate,
-                                Float crossoverProbability,
-                                Function fitnessFunction,
+                                Function<Chromosome, Float> fitnessFunction,
                                 String selectionAlgorithm)
     {
         setSelectionAlgorithm(selectionAlgorithm);
@@ -44,7 +43,7 @@ public class BaseGeneticAlgorithm implements IGA {
         this.fitnessFunction = fitnessFunction;
         this.populationSize = populationSize;
         this.probabilityOfMutation = probabilityMutation;
-        this.crossoverProbability = crossoverProbability;
+        this.crossoverAlgorithm = "one-point";
 
         populations = new ArrayList<>();
         this.generation = 0;
@@ -57,7 +56,7 @@ public class BaseGeneticAlgorithm implements IGA {
     }
 
     @Override
-    public Function fitnessFunction() {
+    public Function<Chromosome, Float> fitnessFunction() {
         return this.fitnessFunction;
     }
 
@@ -79,11 +78,6 @@ public class BaseGeneticAlgorithm implements IGA {
     @Override
     public Float getCrossoverRate() {
         return crossoverRate;
-    }
-
-    @Override
-    public Float getCrossoverProbability() {
-        return crossoverProbability;
     }
 
     @Override
@@ -140,8 +134,8 @@ public class BaseGeneticAlgorithm implements IGA {
         generation++;
         elitifyChromosomes();
         List<Chromosome> nonElites = selectChromosomes();
-        crossoverChromosomes(nonElites);
-        mutateChromosomes(nonElites);
+        nonElites = crossoverChromosomes(nonElites);
+        nonElites = mutateChromosomes(nonElites);
         addNonElites(nonElites);
     }
 
@@ -152,7 +146,7 @@ public class BaseGeneticAlgorithm implements IGA {
         }
     }
 
-    public List<Chromosome> getBestFromEachGeneration(){
+    public List<Chromosome> getBestFromEachGeneration() throws NoSuchElementException {
         return getBestChromosomes();
     }
 }

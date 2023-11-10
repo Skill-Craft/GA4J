@@ -11,11 +11,10 @@ public interface IGA {
     Float getProbabilityOfMutation();
     Float getElitismRate();
     Float getCrossoverRate();
-    Float getCrossoverProbability();
     Integer getPopulationSize();
     Integer getChromosomeSize();
     Integer getMaxGenerations();
-    Function fitnessFunction();
+    Function<Chromosome, Float> fitnessFunction();
     List<List<Chromosome>> getAllPopulations();
     Integer getGeneration();
     String getCrossoverAlgorithm();
@@ -56,7 +55,11 @@ public interface IGA {
     }
 
     default void preProcessRoulette(){
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        Float sum = getPopulation().stream().reduce(0f, (acc, c) -> {
+            c.setRouletteValue(acc + c.getFitness());
+            return acc + c.getFitness();
+        }, Float::sum);
+        getPopulation().stream().parallel().forEach(c -> c.setRouletteValue(c.getRouletteValue()/sum));
     }
 
     default List<Chromosome> roulette(Integer numberOfChromosomes) throws VerifyError{
@@ -113,17 +116,35 @@ public interface IGA {
     }
 
 
-    default void crossoverChromosomes(List<Chromosome> nonElites){
+    default List<Chromosome> crossoverChromosomes(List<Chromosome> nonElites){
+        List<Chromosome> result = new ArrayList<>();
         //!!!!!!!!!!!!!!!!!!
+        for(int i=0; i<(int)(getPopulationSize()*getCrossoverRate());i++){
+            Thread actor = new Thread(() -> {
+                Random rand = new Random();
+                int i1 = rand.nextInt();
+                int i2 = rand.nextInt();
+                while(i2 == i1){
+                    i2 = rand.nextInt();
+                }
+                Chromosome[] children = nonElites.get(i1).crossover(nonElites.get(i2), getCrossoverAlgorithm());
+                result.add(children[0]);
+                result.add(children[1]);
+            });
+            actor.start();
+        }
+        return result;
     }
 
 
-    default void mutateChromosomes(List<Chromosome> nonElites){
+    default List<Chromosome> mutateChromosomes(List<Chromosome> nonElites){
+        List<Chromosome> result = new ArrayList<>();
         nonElites.stream().parallel().forEach(c -> {
-            if (Math.random() < getProbabilityOfMutation()){
-                c.mutate(getMutationRate());
+            if (Math.random() < getMutationRate()){
+                result.add(c.createMutant(getProbabilityOfMutation()));
             }
         });
+        return result;
     }
 
     default void addNonElites(List<Chromosome> nonElites){
@@ -135,11 +156,11 @@ public interface IGA {
     void run(boolean verbose);
 
 
-    default List<Chromosome> getBestChromosomes(){
+    default List<Chromosome> getBestChromosomes() throws NoSuchElementException {
         return getAllPopulations().stream().parallel().map(arr -> {
             ArrayList<Chromosome> aux = new ArrayList<>(arr);
-            aux.sort(Comparator.comparing(Chromosome::getFitness));
-            return aux.get(0);
+            var res = aux.stream().max(Comparator.comparing(Chromosome::getFitness));
+            return res.get();
         }).toList();
     }
 
