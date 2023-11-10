@@ -24,9 +24,9 @@ public interface IGA {
 
     default List<Chromosome> getPopulation(){
         if(!getAllPopulations().isEmpty()){
-            return getAllPopulations().get(getGeneration()-1);
+            return getAllPopulations().get(getGeneration());
         }
-        return null;
+        throw new RuntimeException("Population not initialized");
     }
     default Integer getEliteNumber(){
         return (int) (getPopulationSize() * getElitismRate());
@@ -37,6 +37,7 @@ public interface IGA {
     }
 
     default void generateInitialPopulation(){
+        getAllPopulations().add(new ArrayList<>());
         getAllPopulations().get(getGeneration()).addAll(Chromosome.generatePopulation(getPopulationSize(), getChromosomeSize(), fitnessFunction()));
     }
 
@@ -50,30 +51,56 @@ public interface IGA {
     }
 
     default void elitifyChromosomes(){
-        List<Chromosome> aux = getAllPopulations().get(getGeneration()-1).stream().parallel().sorted().toList();
-        getAllPopulations().add(aux.subList(0, getEliteNumber()));
+        List<Chromosome> aux = getAllPopulations().get(getPreviousGeneration()).stream().sorted(Comparator.comparing(Chromosome::getFitness)).toList();
+        getAllPopulations().add(new ArrayList<>(aux.subList(getPopulationSize()-getEliteNumber(), getPopulationSize())));
+    }
+
+    default int getPreviousGeneration() {
+        return getGeneration() - 1;
     }
 
     default void preProcessRoulette(){
-        Float sum = getPopulation().stream().reduce(0f, (acc, c) -> {
+        Float sum = getAllPopulations().get(getPreviousGeneration()).stream().reduce(0f, (acc, c) -> {
             c.setRouletteValue(acc + c.getFitness());
             return acc + c.getFitness();
         }, Float::sum);
-        getPopulation().stream().parallel().forEach(c -> c.setRouletteValue(c.getRouletteValue()/sum));
+        getAllPopulations().get(getPreviousGeneration()).stream().parallel().forEach(c -> c.setRouletteValue(c.getRouletteValue()/sum));
     }
 
     default List<Chromosome> roulette(Integer numberOfChromosomes) throws VerifyError{
         preProcessRoulette();
+        List<Chromosome> res = Collections.synchronizedList(new ArrayList<>());
+        List<Thread> threads = new ArrayList<>();
         for(int i=0; i<numberOfChromosomes; i++){
-            List<Chromosome> aux = getAllPopulations().get(getGeneration()-1).stream().parallel().filter(c -> c.getRouletteValue() >= Math.random()).toList();
-            Optional<Chromosome> chromosome = aux.stream().min(Comparator.comparing(Chromosome::getRouletteValue));
-            if(chromosome.isPresent()){
-                getPopulation().add(chromosome.get());
-            } else{
-                throw new VerifyError("Unexpected error occurred");
+            Thread worker = new Thread(() -> {
+                List<Chromosome> aux = getAllPopulations()
+                        .get(getPreviousGeneration())
+                        .stream()
+                        .parallel()
+                        .filter(c -> c.getRouletteValue() >= Math.random())
+                        .toList();
+
+                Optional<Chromosome> chromosome = aux
+                        .stream()
+                        .min(Comparator.comparing(Chromosome::getRouletteValue));
+
+                if(chromosome.isPresent()){
+                    res.add(chromosome.get());
+                } else{
+                    throw new VerifyError("Unexpected error occurred");
+                }
+            });
+            threads.add(worker);
+            worker.start();
+        }
+        for(var thread: threads){
+            try{
+                thread.join();
+            } catch(InterruptedException e){
+                e.printStackTrace();
             }
         }
-        return null;
+        return res;
     }
 
     default List<Chromosome> tournament(Integer numberOfChromosomes){
@@ -88,10 +115,11 @@ public interface IGA {
 
     default List<Chromosome> random(Integer numberOfChromosomes){
         Random rand = new Random();
-        for(int i=0; i<getPopulationSize();i++){
-            getPopulation().add(getAllPopulations().get(getGeneration()-1).get(rand.nextInt(getPopulationSize())));
+        List<Chromosome> aux = new ArrayList<>(getPopulationSize());
+        for(int i=0; i<numberOfChromosomes;i++){
+            aux.set(i, getAllPopulations().get(getPreviousGeneration()).get(Math.floorMod(getPopulationSize(),getPopulationSize())));
         }
-        return null;
+        return aux;
     }
 
 
@@ -116,35 +144,45 @@ public interface IGA {
     }
 
 
-    default List<Chromosome> crossoverChromosomes(List<Chromosome> nonElites){
-        List<Chromosome> result = new ArrayList<>();
-        //!!!!!!!!!!!!!!!!!!
+    default void crossoverChromosomes(List<Chromosome> nonElites){
+        List<Thread> threads = new ArrayList<>();
         for(int i=0; i<(int)(getPopulationSize()*getCrossoverRate());i++){
             Thread actor = new Thread(() -> {
                 Random rand = new Random();
-                int i1 = rand.nextInt();
-                int i2 = rand.nextInt();
+                int i1 = Math.floorMod(rand.nextInt(), nonElites.size());
+                int i2 = Math.floorMod(rand.nextInt(), nonElites.size());
                 while(i2 == i1){
-                    i2 = rand.nextInt();
+                    i2 = Math.floorMod(rand.nextInt(), nonElites.size());
                 }
                 Chromosome[] children = nonElites.get(i1).crossover(nonElites.get(i2), getCrossoverAlgorithm());
-                result.add(children[0]);
-                result.add(children[1]);
+                nonElites.set(i1, children[0]);
+                nonElites.set(i2, children[1]);
             });
+            threads.add(actor);
             actor.start();
         }
-        return result;
+
+        for(var thread: threads){
+            try{
+                thread.join();
+            } catch(InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+//        System.out.println(nonElites.size());
+        //!!!!!!!!!!!!!!!!!!!!!!!!!! HANDLE THE LACK OF WAITING FOR THE THREADS TO FINISH
     }
 
+    void setUniformCrossoverMask(List<Boolean> mask);
+    List<Boolean> getUniformCrossoverMask();
 
-    default List<Chromosome> mutateChromosomes(List<Chromosome> nonElites){
-        List<Chromosome> result = new ArrayList<>();
+
+    default void mutateChromosomes(List<Chromosome> nonElites){
         nonElites.stream().parallel().forEach(c -> {
             if (Math.random() < getMutationRate()){
-                result.add(c.createMutant(getProbabilityOfMutation()));
+                c.mutate(getProbabilityOfMutation());
             }
         });
-        return result;
     }
 
     default void addNonElites(List<Chromosome> nonElites){
@@ -160,7 +198,11 @@ public interface IGA {
         return getAllPopulations().stream().parallel().map(arr -> {
             ArrayList<Chromosome> aux = new ArrayList<>(arr);
             var res = aux.stream().max(Comparator.comparing(Chromosome::getFitness));
-            return res.get();
+            if(res.isPresent()){
+                return res.get();
+            } else{
+                throw new NoSuchElementException("Unexpected error occurred");
+            }
         }).toList();
     }
 

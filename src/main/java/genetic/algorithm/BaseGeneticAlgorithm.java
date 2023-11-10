@@ -11,6 +11,7 @@ public class BaseGeneticAlgorithm implements IGA {
 
     private final Function<Chromosome, Float> fitnessFunction;
     private final Float elitismRate;
+    private List<Boolean> uniformCrossoverMask;
     private String selectionAlgorithm;
 
     private String crossoverAlgorithm = "one-point";
@@ -35,6 +36,7 @@ public class BaseGeneticAlgorithm implements IGA {
                                 String selectionAlgorithm)
     {
         setSelectionAlgorithm(selectionAlgorithm);
+        setCrossoverAlgorithm("one-point");
         this.chromosomeSize = chromosomeSize;
         this.maxGenerations = maxGenerations;
         this.mutationRate = mutationRate;
@@ -44,6 +46,7 @@ public class BaseGeneticAlgorithm implements IGA {
         this.populationSize = populationSize;
         this.probabilityOfMutation = probabilityMutation;
         this.crossoverAlgorithm = "one-point";
+        this.uniformCrossoverMask = new ArrayList<>();
 
         populations = new ArrayList<>();
         this.generation = 0;
@@ -124,8 +127,17 @@ public class BaseGeneticAlgorithm implements IGA {
     }
 
     @Override
+    public void setUniformCrossoverMask(List<Boolean> mask){
+        this.uniformCrossoverMask = mask;
+    }
+
+    @Override
+    public List<Boolean> getUniformCrossoverMask(){
+        return this.uniformCrossoverMask;
+    }
+
+    @Override
     public void next(boolean verbose){
-        populations.add(new ArrayList<>());
         if(generation == 0){
             generateInitialPopulation();
         }
@@ -134,8 +146,8 @@ public class BaseGeneticAlgorithm implements IGA {
         generation++;
         elitifyChromosomes();
         List<Chromosome> nonElites = selectChromosomes();
-        nonElites = crossoverChromosomes(nonElites);
-        nonElites = mutateChromosomes(nonElites);
+        crossoverChromosomes(nonElites);
+        mutateChromosomes(nonElites);
         addNonElites(nonElites);
     }
 

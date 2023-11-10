@@ -40,11 +40,6 @@ public class Main {
                 fitnessFunction,
                 selectionAlgorithm
         );
-        ga.setCrossoverAlgorithm("one-point");
         ga.run(true);
-        var res = ga.getBestFromEachGeneration();
-        for(int i=0; i<res.size(); i++){
-            res.get(i).printFitness(i);
-        }
     }
 }
