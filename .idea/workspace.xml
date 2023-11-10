@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="to implement: tournament, rank">
+    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="solved all bugs (including race conditions)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" afterDir="false" />
@@ -231,7 +231,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699623172931</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="solved all bugs (including race conditions)">
+      <option name="closed" value="true" />
+      <created>1699646921193</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1699646921193</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -248,6 +256,7 @@
     <MESSAGE value="implemented main for testing reasons" />
     <MESSAGE value="to implement: preProcessRoulette, tournament, rank, crossoverChromosomes" />
     <MESSAGE value="to implement: tournament, rank" />
-    <option name="LAST_COMMIT_MESSAGE" value="to implement: tournament, rank" />
+    <MESSAGE value="solved all bugs (including race conditions)" />
+    <option name="LAST_COMMIT_MESSAGE" value="solved all bugs (including race conditions)" />
   </component>
 </project>

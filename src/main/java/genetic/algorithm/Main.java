@@ -26,7 +26,7 @@ public class Main {
         Float elitismRate = 0.1f;
         Float mutationRate = 0.1f;
         Float probabilityMutation = 0.1f;
-        Float crossoverRate = 0.1f;
+        Float crossoverRate = 0.5f;
         Function<Chromosome, Float> fitnessFunction = (Function<Chromosome, Float>) t -> t.getState().stream().reduce(0, Integer::sum).floatValue();
         String selectionAlgorithm = "roulette";
         BaseGeneticAlgorithm ga = new BaseGeneticAlgorithm(
@@ -40,6 +40,7 @@ public class Main {
                 fitnessFunction,
                 selectionAlgorithm
         );
-        ga.run(true);
+        ga.run(false);
+        ga.getBestFromEachGeneration().forEach(c -> c.printFitness(ga.getBestFromEachGeneration().indexOf(c)));
     }
 }

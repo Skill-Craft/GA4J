@@ -96,8 +96,7 @@ public interface IGA {
         for(var thread: threads){
             try{
                 thread.join();
-            } catch(InterruptedException e){
-                e.printStackTrace();
+            } catch(InterruptedException ignored){
             }
         }
         return res;
@@ -114,7 +113,6 @@ public interface IGA {
     }
 
     default List<Chromosome> random(Integer numberOfChromosomes){
-        Random rand = new Random();
         List<Chromosome> aux = new ArrayList<>(getPopulationSize());
         for(int i=0; i<numberOfChromosomes;i++){
             aux.set(i, getAllPopulations().get(getPreviousGeneration()).get(Math.floorMod(getPopulationSize(),getPopulationSize())));
@@ -165,8 +163,7 @@ public interface IGA {
         for(var thread: threads){
             try{
                 thread.join();
-            } catch(InterruptedException e){
-                e.printStackTrace();
+            } catch(InterruptedException ignored){
             }
         }
 //        System.out.println(nonElites.size());
@@ -195,9 +192,9 @@ public interface IGA {
 
 
     default List<Chromosome> getBestChromosomes() throws NoSuchElementException {
-        return getAllPopulations().stream().parallel().map(arr -> {
-            ArrayList<Chromosome> aux = new ArrayList<>(arr);
-            var res = aux.stream().max(Comparator.comparing(Chromosome::getFitness));
+        return getAllPopulations().stream()
+                .map(arr -> {
+            var res = arr.stream().max(Comparator.comparing(Chromosome::getFitness));
             if(res.isPresent()){
                 return res.get();
             } else{

@@ -141,7 +141,8 @@ public class BaseGeneticAlgorithm implements IGA {
         if(generation == 0){
             generateInitialPopulation();
         }
-        System.out.printf("GENERATION %d: %n", generation);
+        if(verbose)
+            System.out.printf("GENERATION %d: %n", generation);
         evaluateChromosomes(verbose);
         generation++;
         elitifyChromosomes();
@@ -156,6 +157,7 @@ public class BaseGeneticAlgorithm implements IGA {
         while (generation < getMaxGenerations()){
             next(verbose);
         }
+        evaluateChromosomes(verbose);
     }
 
     public List<Chromosome> getBestFromEachGeneration() throws NoSuchElementException {
