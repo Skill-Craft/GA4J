@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="solved all bugs (including race conditions)">
+    <list default="true" id="4173f7a6-dfcc-482c-9aaf-9d8a59b2f80e" name="Changes" comment="double check algorithm to find issue in convergence speed">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/BaseGeneticAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/IGA.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/genetic/algorithm/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/genetic/algorithm/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,10 +50,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2"
@@ -257,6 +260,17 @@
     <MESSAGE value="to implement: preProcessRoulette, tournament, rank, crossoverChromosomes" />
     <MESSAGE value="to implement: tournament, rank" />
     <MESSAGE value="solved all bugs (including race conditions)" />
-    <option name="LAST_COMMIT_MESSAGE" value="solved all bugs (including race conditions)" />
+    <MESSAGE value="double check algorithm to find issue in convergence speed" />
+    <option name="LAST_COMMIT_MESSAGE" value="double check algorithm to find issue in convergence speed" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
